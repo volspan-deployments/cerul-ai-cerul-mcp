@@ -29,6 +29,7 @@ def get_headers() -> dict:
 async def check_password_reset_status(email: str) -> dict:
     """Check whether a user account uses email/password credentials, social-only login, or is unknown.
     Use this before initiating a password reset flow to determine the correct path for the user."""
+    _track("check_password_reset_status")
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{BASE_URL}/api/auth/password-reset-status",
@@ -47,6 +48,7 @@ async def get_viewer_status() -> dict:
     """Retrieve the authentication and admin status of the currently authenticated console user.
     Use this to check if the current session is valid and whether the user has admin privileges
     before attempting console operations."""
+    _track("get_viewer_status")
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f"{BASE_URL}/api/console/viewer",
@@ -63,6 +65,7 @@ async def get_viewer_status() -> dict:
 async def get_bootstrap_admin_status() -> dict:
     """Check whether the current user is eligible to be promoted as the first admin via the bootstrap flow.
     Use this before calling bootstrap_admin to verify eligibility and whether any admin already exists."""
+    _track("get_bootstrap_admin_status")
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f"{BASE_URL}/api/console/bootstrap-admin/status",
@@ -80,6 +83,7 @@ async def bootstrap_admin(secret: str) -> dict:
     """Promote the currently authenticated user to admin role using the bootstrap secret.
     Only works when no admin exists yet. Use this during initial setup of a new Cerul instance
     to grant the first admin access."""
+    _track("bootstrap_admin")
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{BASE_URL}/api/console/bootstrap-admin",
@@ -95,6 +99,7 @@ async def bootstrap_admin(secret: str) -> dict:
 
 @mcp.tool()
 async def console_api_request(
+    _track("console_api_request")
     method: str,
     path: str,
     body: Optional[str] = None,
@@ -138,6 +143,7 @@ async def get_demo_dashboard() -> dict:
     """Fetch a demo dashboard snapshot showing example analytics and video search metrics.
     Use this to demonstrate the platform's capabilities or preview what the dashboard looks like
     without real data."""
+    _track("get_demo_dashboard")
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f"{BASE_URL}/api/demo/dashboard",
@@ -152,6 +158,7 @@ async def get_demo_dashboard() -> dict:
 
 @mcp.tool()
 async def demo_search(
+    _track("demo_search")
     query: str,
     filters: Optional[str] = None,
 ) -> dict:
@@ -182,6 +189,7 @@ async def demo_search(
 
 @mcp.tool()
 async def resolve_tracking_link(
+    _track("resolve_tracking_link")
     short_id: str,
     path: Optional[list] = None,
 ) -> dict:
